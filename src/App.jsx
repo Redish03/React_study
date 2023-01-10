@@ -1,34 +1,45 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import { useEffect, useState } from "react";
+import axios from "axios";
+// yarn add axios
+// or
+// npm i axios
 
-function App() {
-  const [count, setCount] = useState(0)
+// interface Post {
+//   userId: number;
+//   id: number;
+//   title: string;
+//   body: string;
+// }
+
+const App = () => {
+  // const [posts, setPosts] = useState<Post[]>();
+  const [posts, setPosts] = useState();
+
+  const getPost = async () => {
+    // async -> 비동기 함수
+    const { data } = await axios.get(
+      "https://jsonplaceholder.typicode.com/posts"
+    );
+    setPosts(data);
+  };
+
+  useEffect(() => {
+    getPost();
+  }, []);
 
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+    <div>
+      {posts?.map((post) => {
+        //optional..undefined 를 반환한다.
+        return (
+          <div key={post.id}>
+            <div>{post.title}</div>
+            <div>{post.body}</div>
+          </div>
+        );
+      })}
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;
